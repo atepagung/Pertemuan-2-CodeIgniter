@@ -5,5 +5,12 @@
 				{
 		      parent::__construct();
 				}		
+				
+			public function getMahasiswa()
+				{
+					return $this->db->select('*')
+											->from('mahasiswa')
+											->get();
+				}		
 		}
 ?>
