@@ -6,5 +6,10 @@ class c_new_mahasiswa extends CI_Controller {
 	{
 		$this->load->view('new_mahasiswa');
 	}
+	
+	public function keHomepage()
+	{
+		$this->load->view('homepage');
+	}
 }
 ?>
