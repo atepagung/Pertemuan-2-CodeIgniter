@@ -22,5 +22,10 @@ class c_homepage extends CI_Controller {
 	{
 		$this->load->view('homepage');
 	}
+
+	public function gantiHalaman()
+	{
+		$this->load->view('new_mahasiswa');
+	}
 }
 ?>
