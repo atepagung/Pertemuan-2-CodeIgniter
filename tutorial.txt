@@ -1,0 +1,168 @@
+Steps:
+1. Buka XAMPP dan nyalain Apache & MySQL (kalo MySQL gak bisa dijalanin, service MySQL yang ada di Windows harus diberhentiin dulu)
+2. Extract .zip CodeIgniter -> namakan foldernya terserah anda, kalo urang namainnya 'test'
+3. Buka folder dimana XAMPP diinstall -> pindahkan folder CI yg udah diekstrak ke folder htdocs (ada di dalam folder XAMPP)
+4. Untuk memeriksa udh bisa jalan ato belum CInya, buka browser dan di URLnya ketik localhost/nama_folder_CI
+5. Ada beberapa konfigurasi yg harus diubah untuk menjalankan CI, diantaranya:
+	- Buka folder CI yg udh diekstrak yg ada di htdocs
+	- Di folder application -> folder config -> file autoload.php, tambahkan 'database' sebagai parameter dari fungsi array() pada $autoload['libraries'], hasilnya $autoload['libraries'] = array('database');
+	- Di folder application -> folder config -> file autoload.php, tambahkan 'url' sebagai parameter dari fungsi array() pada $autoload['helper'], hasilnya $autoload['helper'] = array('url');
+	- Di folder application -> folder config -> file config.php, tambahkan 'http://localhost/nama_folder_CI/' di tanda '' kosong pada $config['base_url'], hasilnya $config['base_url'] = 'http://localhost/test/';
+6. Buat View baru bernama homepage.php. Disave di dalam folder application -> folder views. Isi dari homepage.php:
+	<!DOCTYPE html>
+	<html>
+	<head>
+		<title>Homepage</title>
+	</head>
+	<body>
+		<h1>Ini adalah Homepage</h1>
+	</body>
+	</html>	
+
+7. Buat Controller baru bernama c_homepage.php. Disave di dalam folder application -> folder controllers. Isi dari c_homepage.php:
+	<?php
+	defined('BASEPATH') OR exit('No direct script access allowed');
+	class c_homepage extends CI_Controller {
+
+		public function index()
+		{
+			$this->load->view('homepage');
+		}
+	}
+	?>
+
+8. Ganti konfigurasi dalam folder config -> file routes.php, ganti 'welcome' menjadi 'c_homepage' pada $route['default_controller'], hasilnya $route['default_controller'] = 'c_homepage';
+9. Ganti konfigurasi dalam folder config -> file autoload.php, tambahkan 'url' sebagai parameter dari fungsi array() pada $autoload['helper'], hasilnya $autoload['helper'] = array('url');
+10. Buat View baru bernama new_mahasiswa.php. isave di dalam folder application -> folder views. Isi dari new_mahasiswa.php:
+	<!DOCTYPE html>
+	<html>
+	<head>
+		<title>New Mahasiswa</title>
+	</head>
+	<body>
+		<h1>Halaman New Mahasiswa</h1>
+	</body>
+	</html>	
+
+
+11. Pada Controller c_homepage.php, buat fungsi baru di bawah fungsi index():
+	public function gantiHalaman()
+	{
+		$this->load->view('new_mahasiswa');
+	}
+
+12. Pada View homepage.php, di bawah tag <h1>Ini adalah Homepage</h>, tambahkan:
+ 	<h2><a href="<?php echo site_url(); ?>/c_homepage/gantiHalaman">Ke halaman New Mahasiswa</a></h2>
+
+13. Buat Controller baru bernama c_new_mahasiswa.php. Disave di dalam folder application -> folder controllers. Isi dari c_new_mahasiswa.php:
+	<?php
+	defined('BASEPATH') OR exit('No direct script access allowed');
+	class c_new_mahasiswa extends CI_Controller {
+
+		public function index()
+		{
+			$this->load->view('new_mahasiswa');
+		}
+
+		public function keHomepage()
+		{
+			$this->load->view('homepage');
+		}
+	}
+	?>
+
+14. Pada View new_mahasiswa.php, di bawah tag <h1>Halaman New Mahasiswa</h1>, tambahkan:
+ 	<h2><a href="<?php echo site_url(); ?>/c_new_mahasiswa/keHomepage">Kembali ke Homepage</a></h2>
+
+15. Pada browser, buka http://localhost/phpmyadmin/. 
+	- Buat db baru bernama 'test' (pada sidebar terdapat link 'New')
+	- Buat tabel baru bernama'mahasiswa' dengan 6 colomn
+		* id; tipe data int, auto_increment
+		* npm; tipe data char, dengan length 12
+		* nama; tipe data varchar, dengan length 30
+		* jk; tipe data int, dengan length 2
+		* tgl_lhr; tipe data date
+		* alamat; tipe data varchar, dengan length 40
+	- Masukkan 1 data ke dalam tabel 'mahasiswa' (klik 'Insert' pada navbar di atas)		
+
+16. Ganti konfigurasi dalam folder config -> file database.php. Tambahkan 'root' pada 'username' dan 'nama_database' pada 'database'. Hasilnya 'username' => 'root', dan 'database' => 'test',
+
+17. Buat Model baru bernama m_homepage.php. Disave di dalam folder application -> folder models. Isi dari m_homepage.php:
+	<?php
+	class m_homepage extends CI_model
+	{
+		 public function __construct()
+		{
+		      parent::__construct();
+		}	
+
+		public function getMahasiswa()
+		{
+		return $this->db->select('*')
+				->from('mahasiswa')
+				->get();
+		}			
+	}
+	?>
+
+19. Pada Controller c_homepage.php, tambah constructor dan ganti fungsi index(). Hasilnya:
+	<?php
+	defined('BASEPATH') OR exit('No direct script access allowed');
+
+	class c_homepage extends CI_Controller {
+	
+		function __construct()
+		{
+			parent::__construct();
+			$this->load->model('m_homepage');
+		}
+
+		public function index()
+		{
+			$data['mahasiswa'] = $this->m_homepage->getMahasiswa();
+			$this->load->view('homepage', $data);	
+		}
+
+		public function gantiHalaman()
+		{
+			$this->load->view('new_mahasiswa');
+		}
+	}
+	?>
+
+20. Pada View homepage.php, tambahkan tabel yg berguna untuk menampilkan data yg ada di database. Hasilnya:
+	<!DOCTYPE html>
+	<html>
+	<head>
+		<title>Homepage</title>
+	</head>
+	<body>
+		<h1>Ini adalah Homepage</h1>
+
+		<table>
+			<tr>
+				<th>ID</th>
+				<th>NPM</th>
+				<th>Nama</th>
+				<th>Jenis Kelamin</th>
+				<th>Tanggal Lahir</th>
+				<th>Alamat</th>
+			</tr>
+			<?php
+		 	foreach ($mahasiswa->result() as $mhs) 
+		 		{ ?>
+	 			<tr>
+	 				<td><?php echo $mhs->id;?></td>
+	 				<td><?php echo $mhs->npm;?></td>
+	 				<td><?php echo $mhs->nama;?></td>
+	 				<td><?php echo $mhs->jk;?></td>
+	 				<td><?php echo $mhs->tgl_lhr;?></td>
+	 				<td><?php echo $mhs->alamat; ?></td>
+	 			</tr>
+			<?php 
+				} ?> 
+		</table>
+
+		<h2><a href="<?php echo site_url(); ?>/c_homepage/gantiHalaman">Ke halaman New Mahasiswa</a></h2>
+	</body>
+	</html>
