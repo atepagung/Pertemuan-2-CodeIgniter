@@ -1,4 +1,11 @@
-Steps:
+==============================
+Membuat Website CRUD sederhana
+==============================
+
+Always keep in mind:
+- Buatlah kodingan yang rapih agar mudah untuk dipahami dan mudah untuk menyelesaikan bug yang ada (perhatikan indentasi, penempatan kurung kurawal, konsistensi kodingan)
+- Setiap kali membuat perubahan fungsional pada webnya, jangan lupa untuk direfresh halamannya agar perubahannya dapat diterapkan
+
 1. Buka XAMPP dan nyalain Apache & MySQL (kalo MySQL gak bisa dijalanin, service MySQL yang ada di Windows harus diberhentiin dulu)
 2. Extract .zip CodeIgniter -> namakan foldernya terserah anda, kalo urang namainnya 'test'
 3. Buka folder dimana XAMPP diinstall -> pindahkan folder CI yg udah diekstrak ke folder htdocs (ada di dalam folder XAMPP)
@@ -166,3 +173,367 @@ Steps:
 		<h2><a href="<?php echo site_url(); ?>/c_homepage/gantiHalaman">Ke halaman New Mahasiswa</a></h2>
 	</body>
 	</html>
+
+21. Buat Model baru bernama m_new_mahasiswa.php. Disave di dalam folder application -> folder models. Isi dari m_homepage.php:
+	<?php
+	class m_new_mahasiswa extends CI_model
+	{
+		 public function __construct()
+		{
+		      parent::__construct();
+		}	
+
+		public function getMahasiswa()
+		{
+		return $this->db->select('*')
+				->from('mahasiswa')
+				->get();
+		}			
+	}
+	?>
+
+22. Pada controller c_new_mahasiswa.php, tambahkan sebuah constructor agar dapat menggunakan Model m_new_mahasiswa dan tambahkan pada fungsi keHomepage() agar dapat menampilkan data yg ada di DB. Hasilnya:
+	<?php
+	defined('BASEPATH') OR exit('No direct script access allowed');
+	class c_new_mahasiswa extends CI_Controller {
+		function __construct()
+		{
+			parent::__construct();
+			$this->load->model('m_new_mahasiswa');
+		}
+	
+		public function index()
+		{
+			$this->load->view('new_mahasiswa');
+		}
+	
+		public function keHomepage()
+		{
+			$data['mahasiswa'] = $this->m_new_mahasiswa->getMahasiswa();
+			$this->load->view('homepage', $data);	
+		}
+	}
+	?>	
+
+23. Pada View new_mahasiswa.php, tambah form baru yang akan digunakan untuk menginputkan data. Hasilnya:
+	<!DOCTYPE html>
+	<html>
+	<head>
+		<title>New Mahasiswa</title>
+	</head>
+	<body>
+		<h1>Halaman New Mahasiswa</h1>
+		<form method="POST" action="<?php echo base_url('index.php/c_new_mahasiswa/addData'); ?>">
+ 		<table>
+ 		<tr>
+ 			<td>
+				<label>NPM</label>
+				<input type="text" name="npm">
+ 			</td>
+ 		</tr>
+ 		<tr>
+ 			<td>
+				<label>Nama</label>
+				<input type="text" name="nama">
+ 			</td>
+ 		</tr>
+ 		<tr>
+ 			<td>
+				<label>Jenis Kelamin</label>
+				<input type="text" name="jk">
+ 			</td>
+ 		</tr>
+ 		<tr>
+ 			<td>
+ 				<label>Tanggal Lahir</label>
+ 				<input type="date" name="tgl_lhr">
+ 			</td>
+ 		</tr>
+ 		<tr>
+ 			<td>
+				<label>Alamat Rumah</label>
+				<input type="text" name="alamat">
+ 			</td>
+ 		</tr>
+ 		<tr>
+ 			<td>
+ 				<button type="submit">Submit</button>
+ 			</td>	
+ 		</tr>
+ 		</table>
+		</form>
+		<h2><a href="<?php echo site_url(); ?>/c_new_mahasiswa/keHomepage">Kembali ke halaman awal</a></h2>
+	</body>
+	</html>
+
+24. Pada Controller c_new_mahasiswa, buat fungsi baru untuk mengambil data yang telah diinput di Input Box. Hasilnya:
+	<?php
+	defined('BASEPATH') OR exit('No direct script access allowed');
+	class c_new_mahasiswa extends CI_Controller {
+
+		function __construct()
+		{
+			parent::__construct();
+			$this->load->model('m_new_mahasiswa');
+		}
+
+		public function index()
+		{
+			$this->load->view('new_mahasiswa');
+		}
+	
+		public function keHomepage()
+		{
+			$data['mahasiswa'] = $this->m_new_mahasiswa->getMahasiswa();
+			$this->load->view('homepage', $data);	
+		}
+
+		public function addData()
+		{
+			$data = array(
+					'npm'=>$this->input->post('npm'),
+					'nama'=>$this->input->post('nama'),
+					'jk'=>$this->input->post('jk'),
+					'tgl_lhr'=>$this->input->post('tgl_lhr'),
+					'alamat'=>$this->input->post('alamat')
+				);
+			$this->m_new_mahasiswa->registerMahasiswa($data);
+			redirect('c_homepage');
+		}
+	}
+	?>
+
+25. Pada Model m_new_mahasiswa.php, tambahkan fungsi untuk menginputkan data mahasiswa ke DB. Hasilnya:
+	<?php
+	class m_new_mahasiswa extends CI_model {
+		public function __construct()
+		{
+		      parent::__construct();
+		}		
+				
+		public function getMahasiswa()
+		{
+			return $this->db->select('*')
+					->from('mahasiswa')
+					->get();
+		}		
+	
+		public function registerMahasiswa($data)
+		{
+			$this->db->insert('mahasiswa', $data);
+		}
+	}
+	?>
+
+
+26. Pada View homepage.php, tambahkan Form yang berada di dalam sebuah kolom baru. Form ini berguna untuk menghapus data pada baris dari tabel tersebut. Dan juga tambahkan Button pada kolom itu untuk menjalankan Form tersebut. Hasilnya:
+	
+	...
+	foreach ($mahasiswa->result() as $mhs) 
+	 	{ ?>
+	 	<tr>
+			<td><?php echo $mhs->id;?></td>
+			<td><?php echo $mhs->npm;?></td>
+			<td><?php echo $mhs->nama;?></td>
+			<td><?php echo $mhs->jk;?></td>
+			<td><?php echo $mhs->tgl_lhr;?></td>
+			<td><?php echo $mhs->alamat; ?></td>
+			<form method="POST" action="<?php echo site_url(); ?>/c_homepage/deleteData/<?php echo $mhs->id ?>">
+				<td><button type="submit">Hapus</button></td>
+	 		</form>
+	 	</tr>
+	...
+
+27. Pada Controller c_homepage.php, tambahkan fungsi baru untuk menghapus data dari baris yang telah diklik Buttonnya. Hasilnya:
+	
+			...	
+			$this->load->view('new_mahasiswa');
+		}
+
+		public function deleteData()
+		{
+			$id_mahasiswa = $this->uri->segment(3);
+			$this->m_homepage->deleteMahasiswa($id_mahasiswa);
+			redirect('c_homepage');
+		}
+	}
+	?>
+
+28. Pada Model m_homepage.php, tambahkan query untuk menghapus data dari DB. Hasilnya:
+		
+		...
+			->from('mahasiswa')
+			->get();
+		}		
+
+		public function deleteMahasiswa($id)
+		{
+			return $this->db->where('id', $id)
+					->delete('mahasiswa');
+		}
+	}
+	?>
+
+
+29. Pada View homepage.php, tambahkan Form di dalam hasil tabel. Hasilnya:
+	
+	...
+	foreach ($mahasiswa->result() as $mhs) 
+	 	{ ?>
+	 	<tr>
+			<td><?php echo $mhs->id;?></td>
+			<td><?php echo $mhs->npm;?></td>
+			<td><?php echo $mhs->nama;?></td>
+			<td><?php echo $mhs->jk;?></td>
+			<td><?php echo $mhs->tgl_lhr;?></td>
+			<td><?php echo $mhs->alamat; ?></td>
+			<form method="POST" action="<?php echo site_url(); ?>/c_homepage/deleteData/<?php echo $mhs->id ?>">
+				<td><button type="submit">Hapus</button></td>
+	 		</form>
+	 		<form method="POST" action="<?php echo site_url(); ?>/c_homepage/updateData/<?php echo $mhs->id ?>">
+				<td><button type="submit">Perbarui</button></td>
+			</form>
+	 	</tr>
+	...
+
+30. Pada Controller c_homepage.php, tambahkan fungsi untuk memperbarui data. Hasilnya:
+	
+			...
+			$this->m_homepage->deleteMahasiswa($id_mahasiswa);
+			redirect('c_homepage');
+		}
+
+		public function updateData()
+		{	
+			$id_mahasiswa = $this->uri->segment(3);
+			$data['mahasiswa'] = $this->m_homepage->getOneMahasiswa($id_mahasiswa);
+			$this->load->view('new_mahasiswa', $data);
+		}
+
+	}
+	?>
+
+31. Pada model m_homepage.php, tambahkan fungsi baru untuk mengambil row berdasarkan id di DB. Hasilnya:
+
+		
+			...
+			->from('mahasiswa')
+			->get();
+		}
+	
+		public function getOneMahasiswa($id)
+		{
+			return $this->db->select('*')
+					->from('mahasiswa')
+					->where('id', $id)
+					->get();
+		}
+
+	}
+	?>
+
+32. Pada View new_mahasiswa.php, terapkan error handling untuk mengetahui fungsi apa yang memanggil View new_mahasiswa.php. Apakah fungsi gantiHalaman() atau updateData() yang memanggil. Jika fungsi updateData() yang dipanggil, maka data mahasiswa pada baris dimana Buttonnya diklik akan dioper ke View new_mahasiswa dan ditampilkan pada Inputbox. Hasilnya:
+	<!DOCTYPE html>
+	<html>
+	<head>
+		<title>New Mahasiswa</title>
+	</head>
+	<body>
+		<?php if(isset($mahasiswa)) { ?>
+			<h1>Halaman Edit Mahasiswa</h1>
+		<?php } else { ?>
+			<h1>Halaman New Mahasiswa</h1>	
+		<?php } ?>
+
+		<?php if(isset($mahasiswa)) {?>
+			<form method="POST" action="<?php echo base_url()?>index.php/c_new_mahasiswa/updateData/<?php echo $mahasiswa->row()->id; ?>">
+		<?php } else {?>
+			<form method="POST" action="<?php echo base_url('index.php/c_new_mahasiswa/addData'); ?>">
+		<?php } ?>
+		 	<table>
+		 	<tr>
+		 		<td>
+					<label>NPM</label>
+					<input type="text" name="npm" <?php if(isset($mahasiswa)) {?> value="<?php echo $mahasiswa->row()->npm; ?>"> <?php } ?> 
+	 			</td>
+	 		</tr>
+	 		<tr>
+	 			<td>
+					<label>Nama</label>
+					<input type="text" name="nama" <?php if(isset($mahasiswa)) {?> value="<?php echo $mahasiswa->row()->nama; ?>"> <?php } ?> 
+	 			</td>
+	 		</tr>
+	 		<tr>
+	 			<td>
+					<label>Jenis Kelamin</label>
+					<input type="text" name="jk" <?php if(isset($mahasiswa)) {?> value="<?php echo $mahasiswa->row()->jk; ?>"> <?php } ?> 
+	 			</td>
+	 		</tr>
+	 		<tr>
+	 			<td>
+	 				<label>Tanggal Lahir</label>
+	 				<input type="date" name="tgl_lhr" <?php if(isset($mahasiswa)) {?> value="<?php echo $mahasiswa->row()->tgl_lhr; ?>"> <?php } ?> 
+	 			</td>
+	 		</tr>
+	 		<tr>
+	 			<td>
+					<label>Alamat Rumah</label>
+					<input type="text" name="alamat" <?php if(isset($mahasiswa)) {?> value="<?php echo $mahasiswa->row()->alamat; ?>"> <?php } ?> 
+	 			</td>
+	 		</tr>
+	 		<tr>
+	 			<td>
+	 				<button type="submit">Submit</button>
+	 			</td>	
+	 		</tr>
+	 		</table>
+ 			</form>
+
+		<h2><a href="<?php echo site_url(); ?>/c_new_mahasiswa/keHomepage">Kembali ke halaman awal</a></h2>
+	</body>
+	</html>
+
+33. Pada Controller c_new_mahasiswa.php, tambahkan fungsi untuk mengambil data yang telah diinput pada Inputbox. Hasilnya:
+
+			...
+			$this->m_new_mahasiswa->registerMahasiswa($data);
+			redirect('c_homepage');
+		}
+
+		public function updateData()
+		{
+			$id_mahasiswa = $this->uri->segment(3);
+			$npm = $this->input->post('npm');
+			$nama = $this->input->post('nama');
+			$jenis_kelamin = $this->input->post('jk');
+			$tanggal_lahir = $this->input->post('tgl_lhr');
+			$alamat_rumah = $this->input->post('alamat');
+	
+			$this->m_new_mahasiswa->updateMahasiswa($id_mahasiswa, $npm, $nama, $jenis_kelamin, $tanggal_lahir, $alamat_rumah);
+			redirect('c_homepage');	
+		}
+	}
+	?>
+
+34. Pada Model m_new_mahasiswa.php, tambahkan fungsi untuk memperbarui baris tersebut di DB. Hasilnya:
+
+
+			...
+			$this->db->insert('mahasiswa', $data);
+		}
+
+		public function updateMahasiswa($id_mahasiswa, $npm, $nama, $jenis_kelamin, $tanggal_lahir, $alamat)
+		{
+			$data = array(
+					'npm' => $npm,
+					'nama' => $nama,
+					'jk' => $jenis_kelamin,
+					'tgl_lhr' => $tanggal_lahir,
+					'alamat' => $alamat
+			);
+
+			$this->db->where('id', $id_mahasiswa)
+  				 ->update('mahasiswa', $data);
+		}
+	}
+	?>
