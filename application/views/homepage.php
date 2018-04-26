@@ -14,6 +14,7 @@
 			<th>Jenis Kelamin</th>
 			<th>Tanggal Lahir</th>
 			<th>Alamat</th>
+			<th>Operasi</th>
 		</tr>
 		<?php
 	 	foreach ($mahasiswa->result() as $mhs) 
@@ -29,6 +30,11 @@
 		 			<form method="POST" action="<?php echo site_url(); ?>/c_homepage/deleteData/<?php echo $mhs->id ?>">
 						<button type="submit">Hapus</button>
 		 			</form>
+	 			</td>
+	 			<td>
+			 		<form method="POST" action="<?php echo site_url(); ?>/c_homepage/updateData/<?php echo $mhs->id ?>">
+						<button type="submit">Perbarui</button>
+					</form>
 	 			</td>
 	 		</tr>
 		<?php 

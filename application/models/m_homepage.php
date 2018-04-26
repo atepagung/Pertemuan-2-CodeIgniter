@@ -13,10 +13,18 @@
 											->get();
 				}		
 
-				public function deleteMahasiswa($id)
+			public function deleteMahasiswa($id)
 				{
 					return $this->db->where('id', $id)
-							->delete('mahasiswa');
+													->delete('mahasiswa');
+				}
+
+			public function getOneMahasiswa($id)
+				{
+					return $this->db->select('*')
+													->from('mahasiswa')
+													->where('id', $id)
+													->get();
 				}
 		}
 ?>
