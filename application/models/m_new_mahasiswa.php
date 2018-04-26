@@ -12,5 +12,10 @@
 											->from('mahasiswa')
 											->get();
 				}		
+	
+			public function registerMahasiswa($data)
+				{
+					$this->db->insert('mahasiswa', $data);
+				}
 		}
 ?>

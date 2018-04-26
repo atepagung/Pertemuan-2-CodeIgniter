@@ -18,5 +18,18 @@ class c_new_mahasiswa extends CI_Controller {
 		$data['mahasiswa'] = $this->m_new_mahasiswa->getMahasiswa();
 		$this->load->view('homepage', $data);	
 	}
+
+	public function addData()
+	{
+		$data = array(
+				'npm'=>$this->input->post('npm'),
+				'nama'=>$this->input->post('nama'),
+				'jk'=>$this->input->post('jk'),
+				'tgl_lhr'=>$this->input->post('tgl_lhr'),
+				'alamat'=>$this->input->post('alamat')
+			);
+		$this->m_new_mahasiswa->registerMahasiswa($data);
+		redirect('c_homepage');
+	}
 }
 ?>
