@@ -12,5 +12,11 @@
 											->from('mahasiswa')
 											->get();
 				}		
+
+				public function deleteMahasiswa($id)
+				{
+					return $this->db->where('id', $id)
+							->delete('mahasiswa');
+				}
 		}
 ?>

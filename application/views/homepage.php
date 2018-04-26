@@ -25,6 +25,11 @@
 	 			<td><?php echo $mhs->jk;?></td>
 	 			<td><?php echo $mhs->tgl_lhr;?></td>
 	 			<td><?php echo $mhs->alamat; ?></td>
+	 			<td>
+		 			<form method="POST" action="<?php echo site_url(); ?>/c_homepage/deleteData/<?php echo $mhs->id ?>">
+						<button type="submit">Hapus</button>
+		 			</form>
+	 			</td>
 	 		</tr>
 		<?php 
 			} ?> 

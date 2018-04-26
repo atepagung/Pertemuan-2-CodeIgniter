@@ -19,5 +19,12 @@ class c_homepage extends CI_Controller {
 	{
 		$this->load->view('new_mahasiswa');
 	}
+
+	public function deleteData()
+	{
+		$id_mahasiswa = $this->uri->segment(3);
+		$this->m_homepage->deleteMahasiswa($id_mahasiswa);
+		redirect('c_homepage');
+	}
 }
 ?>
