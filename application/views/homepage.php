@@ -1,12 +1,72 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>/assets/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>/assets/css/style.css">
 	<title>Homepage</title>
 </head>
 <body>
-	<h1>Ini adalah Homepage</h1>
+	<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Brand</a>
+    </div>
 
-	<table>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">Link</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Action</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">One more separated link</a></li>
+          </ul>
+        </li>
+      </ul>
+      <form class="navbar-form navbar-left">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#">Link</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Action</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+	<!-- Inline CSS -->
+	<div style="text-align: center" class="jumbotron">
+		<h1>Selamat Datang!</h1>
+		<p><?php echo $mahasiswa->row()->nama;?></p>
+	</div>
+	<h1 style="text-align: center;">Ini adalah Homepage</h1>
+
+	<table class="table table-bordered">
 		<tr>
 			<th>ID</th>
 			<th>NPM</th>
@@ -19,7 +79,7 @@
 		<?php
 	 	foreach ($mahasiswa->result() as $mhs) 
 	 		{ ?>
-	 		<tr>
+	 		<tr class="info">
 	 			<td><?php echo $mhs->id;?></td>
 	 			<td><?php echo $mhs->npm;?></td>
 	 			<td><?php echo $mhs->nama;?></td>
@@ -28,12 +88,11 @@
 	 			<td><?php echo $mhs->alamat; ?></td>
 	 			<td>
 		 			<form method="POST" action="<?php echo site_url(); ?>/c_homepage/deleteData/<?php echo $mhs->id ?>">
-						<button type="submit">Hapus</button>
+						<button class="btn btn-danger" type="submit"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
 		 			</form>
-	 			</td>
-	 			<td>
-			 		<form method="POST" action="<?php echo site_url(); ?>/c_homepage/updateData/<?php echo $mhs->id ?>">
-						<button type="submit">Perbarui</button>
+
+		 			<form method="POST" action="<?php echo site_url(); ?>/c_homepage/updateData/<?php echo $mhs->id ?>">
+						<button class="btn btn-warning" type="submit"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
 					</form>
 	 			</td>
 	 		</tr>
@@ -41,6 +100,13 @@
 			} ?> 
 	</table>
 
-	<h2><a href="<?php echo site_url(); ?>/c_homepage/gantiHalaman">Ke halaman New Mahasiswa</a></h2>
+	<h2><a class="btn btn-primary" href="<?php echo site_url(); ?>/c_homepage/gantiHalaman">Tambah Mahasiswa</a></h2>
+
 </body>
+<!-- Internal CSS -->
+<!-- <style type="text/css">
+	h1 {
+		color: red;
+	}
+</style> -->
 </html>
