@@ -6,6 +6,9 @@ Always keep in mind:
 - Buatlah kodingan yang rapih agar mudah untuk dipahami dan mudah untuk menyelesaikan bug yang ada (perhatikan indentasi, penempatan kurung kurawal, konsistensi kodingan)
 - Setiap kali membuat perubahan fungsional pada webnya, jangan lupa untuk direfresh halamannya agar perubahannya dapat diterapkan
 
+-----------------
+Pertemuan 1: READ
+-----------------
 1. Buka XAMPP dan nyalain Apache & MySQL (kalo MySQL gak bisa dijalanin, service MySQL yang ada di Windows harus diberhentiin dulu)
 2. Extract .zip CodeIgniter -> namakan foldernya terserah anda, kalo urang namainnya 'test'
 3. Buka folder dimana XAMPP diinstall -> pindahkan folder CI yg udah diekstrak ke folder htdocs (ada di dalam folder XAMPP)
@@ -215,6 +218,9 @@ Always keep in mind:
 	}
 	?>	
 
+-----------------------------------
+Pertemuan 2: CREATE, UPDATE, DELETE
+-----------------------------------
 23. Pada View new_mahasiswa.php, tambah form baru yang akan digunakan untuk menginputkan data. Hasilnya:
 	<!DOCTYPE html>
 	<html>
@@ -537,3 +543,71 @@ Always keep in mind:
 		}
 	}
 	?>
+
+-------------------------------
+Pertemuan 3: Layout dan Styling
+-------------------------------
+Side notes:
+- Bootstrap adalah Framework CSS (Cascading Style Sheet), yang bertujuan untuk memudahkan developer dalam styling web mereka
+- Framework Frontend lain yang bisa di-explore: materializecss.com
+- Tempat belajar CSS: https://www.w3schools.com/css/default.as
+
+35. Download bootstrap di https://getbootstrap.com/docs/3.3/
+36. Buat folder 'assets' di dalam folder project ../xampp/htdocs/test/
+37. Ekstrak Bootstrap di dalam folder 'assets'
+38. Di View hompepage.php, di bagian <head></head>, tambahkan file CSS Bootstrap. Hasilnya:
+	
+	...
+	<head>
+		<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>/assets/css/bootstrap.css">
+	</head>
+	...
+
+39. Buka localhost/test di web browser, amati perubahannya
+40. Buka dokumentasi CSS Bootstrap, yang adad di link -> https://getbootstrap.com/docs/3.3/css/
+41. Buka bagian 'Tables', lalu baca bagian "Basic Examples"
+41. Dituliskan pada bagian bawah contoh, bahwa untuk menggunakan tema Table Bootstrap, kita harus menambahkan 'class = "table"' pada tag <table>. Contohnya:
+
+	...
+	<table class="table">
+  		...
+	</table>
+	...
+
+42. Pada View homepage.php, tambahkan pada 'class="table"' pada tag <table>, lalu refresh page localhost/test
+43. Untuk mengubah Button, buka bagian 'Button' pada dokumentasi CSS Bootstrap, lalu pelajari
+44. Untuk memberikan tema Bootstrap ke sebuah tag <button>, berikan attribute 'class="btn btn-default"'. Contohnya:
+
+	...
+	<a class="btn btn-default" href="#" role="button">Link</a>
+	<button class="btn btn-default" type="submit">Button</button>
+	<input class="btn btn-default" type="button" value="Input">
+	<input class="btn btn-default" type="submit" value="Submit">
+	...
+
+
+	btn = class yang menyatakan bentuk button bootstrap
+	btn-default = class yang menyatakan warna dari button bootstrap
+
+45. Tipe warna Button yang ada di Bootstrap:
+	btn-default
+	btn-primary
+	btn-success
+	btn-info
+	btn-warning
+	btn-danger
+
+45. Buka View new_mahasiswa.php
+46. Jangan lupa setiap file View berbeda, harus diberikan link ke file CSS: 
+
+	...
+	<head>
+		<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>/assets/css/bootstrap.css">
+	</head>
+	...
+
+46. Buka bagian 'Forms' pada dokumentasi CSS Bootstrap, baca dan pelajari
+47. Untuk memberikan tema Bootstrap pada sebuah Form, tambahkan 'class="form group"' pada tag <form>
+48. Untuk memberikan tema Bootstrap pada sebuah Input, tambahkan 'class="form-control"' pada tag <input>
+49. Save dan amati perubahannya	
+50. Direkomendasikan untuk mengeksplorasi Bootstrap ini sendiri, dikarenakan sangant banyak class2 yang dapat dipakai untuk memberikan styling pada Views
